@@ -1,32 +1,73 @@
 <template>
 <div class="login">
-<el-card class="login_card">
-    <!-- logo图片 -->
-<div class="login_logo">
-    <img src="../../assets/img/logo_index.png" alt="">
-</div>
-<!-- loginform表单 -->
-<el-form :model="fromData" class="loginForm">
-    <el-form-item>
-        <el-input></el-input>
-    </el-form-item>
-    <el-form-item>
-        <el-input style="width:65%;"></el-input>
-        <el-button style="float:right">获取验证码</el-button>
-    </el-form-item>
-    <el-form-item>
-        <el-checkbox v-model="checked">我已阅读并同意<a>用户协议</a>和<a>隐私条款</a></el-checkbox>
-    </el-form-item>
-    <el-form-item>
-        <el-button type="primary" style="width:100%">登录</el-button>
-    </el-form-item>
-</el-form>
-</el-card>
+    <el-card class="login_card">
+        <!-- logo图片 -->
+        <div class="login_logo">
+            <img src="../../assets/img/logo_index.png" alt="">
+        </div>
+        <!-- loginform表单 -->
+        <el-form :model="formData" class="loginForm" :rules="rules" ref="form">
+            <el-form-item prop="mobile">
+                <el-input placeHolder="请输入手机号" v-model="formData.mobile"></el-input>
+            </el-form-item>
+            <el-form-item prop="code">
+                <el-input style="width:65%;" placeholder="验证码" v-model="formData.code"></el-input>
+                <el-button style="float:right">获取验证码</el-button>
+            </el-form-item>
+            <el-form-item prop="check">
+                <el-checkbox v-model="formData.check">我已阅读并同意<a>用户协议</a>和<a>隐私条款</a></el-checkbox>
+            </el-form-item>
+            <el-form-item>
+                <el-button type="primary" style="width:100%" @click="isAgree">登录</el-button>
+            </el-form-item>
+        </el-form>
+    </el-card>
 </div>
 </template>
 
 <script>
 export default {
+  data () {
+    var func = function (rules, value, callback) {
+      if (value) {
+        callback()
+      } else {
+        callback(new Error('请同意此条款'))
+      }
+    }
+    return {
+      formData: {
+        mobile: '',
+        code: '',
+        check: false
+      },
+      rules: {
+        mobile: [
+          { required: true, message: '请输入手机号', trigger: 'blur' }, // 输入为null，undefined，‘’，
+          { len: 11, message: '请输入正确的手机号' },
+          { pattern: /^1[3456789]\d{9}$/, message: '手机号格式错误' }
+
+        ],
+        code: [
+          { required: true, message: '请输入验证码', trigger: 'blur' },
+          { pattern: /^\d{6}$/, message: '验证码必须是6位数字' }
+
+        ],
+        check: [
+          { validator: func }
+        ]
+      }
+    }
+  },
+  methods: {
+    isAgree () {
+      this.$refs.form.validate(isOK => {
+        // if (isOK) {
+
+        // }
+      })
+    }
+  }
 
 }
 </script>
