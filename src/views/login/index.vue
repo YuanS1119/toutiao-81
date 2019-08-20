@@ -62,9 +62,17 @@ export default {
   methods: {
     isAgree () {
       this.$refs.form.validate(isOK => {
-        // if (isOK) {
-
-        // }
+        if (isOK) {
+          this.$axios({
+            method: 'post', // post提交方法
+            url: '/authorizations', // post接口
+            data: this.formData // post参数
+          }).then(res => {
+            console.log(res)
+            window.localStorage.setItem('userInfo', JSON.stringify(res.data.data))
+            this.$router.push('/home')
+          })
+        }
       })
     }
   }
