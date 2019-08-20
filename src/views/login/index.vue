@@ -44,7 +44,7 @@ export default {
       rules: {
         mobile: [
           { required: true, message: '请输入手机号', trigger: 'blur' }, // 输入为null，undefined，‘’，
-          { len: 11, message: '请输入正确的手机号' },
+          // { len: 11, message: '请输入正确的手机号' },
           { pattern: /^1[3456789]\d{9}$/, message: '手机号格式错误' }
 
         ],
@@ -63,14 +63,20 @@ export default {
     isAgree () {
       this.$refs.form.validate(isOK => {
         if (isOK) {
+          // console.log(this)
           this.$axios({
             method: 'post', // post提交方法
             url: '/authorizations', // post接口
             data: this.formData // post参数
           }).then(res => {
-            console.log(res)
+            // console.log(res)
             window.localStorage.setItem('userInfo', JSON.stringify(res.data.data))
             this.$router.push('/home')
+          }).catch(() => {
+            this.$message({
+              message: '当前用户名或密码错误',
+              type: 'warning'
+            })
           })
         }
       })
@@ -108,3 +114,4 @@ export default {
     }
 }
 </style>
+s

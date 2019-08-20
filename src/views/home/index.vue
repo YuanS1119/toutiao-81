@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-hah
+    home
   </div>
 </template>
 
