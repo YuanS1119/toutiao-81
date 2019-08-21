@@ -16,13 +16,7 @@
 </template>
 
 <script>
-import layoutAside from '../../components/home/layout-aside'
-import layoutHeader from '../../components/home/layout-header'
 export default {
-  components: {
-    'el-aside': layoutAside,
-    'el-header': layoutHeader
-  }
 }
 </script>
 <style lang="less" scoped>
