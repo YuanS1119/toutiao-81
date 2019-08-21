@@ -5,16 +5,22 @@
             <span>江苏传智播客教育科技股份有限公司</span>
         </el-col>
         <el-col :span="3" class="header_right">
-            <img src="../../assets/img/avatar.jpg" alt="" class="img">
-            <el-dropdown trigger="click">
+            <!-- <img src="../../assets/img/avatar.jpg" alt=""> -->
+            <img :src="user.photo?user.photo:defaultImg" alt="">
+            <!-- <el-dropdown trigger="click"> -->
+                  <el-dropdown trigger="click" @command="commandAction">
                 <span class="el-dropdown-link">
                     昵称
+                    {{user.name}}
                     <i class="el-icon-arrow-down el-icon--right"></i>
                 </span>
                 <el-dropdown-menu slot="dropdown">
-                    <el-dropdown-item >个人信息</el-dropdown-item>
+                    <!-- <el-dropdown-item >个人信息</el-dropdown-item>
                     <el-dropdown-item >git地址</el-dropdown-item>
-                    <el-dropdown-item >退出</el-dropdown-item>
+                    <el-dropdown-item >退出</el-dropdown-item> -->
+                    <el-dropdown-item command="account">个人信息</el-dropdown-item>
+                    <el-dropdown-item command="gitUrl">git地址</el-dropdown-item>
+                    <el-dropdown-item command="out">退出</el-dropdown-item>
                 </el-dropdown-menu>
             </el-dropdown>
         </el-col>
@@ -22,7 +28,42 @@
 </template>
 
 <script>
+// export default {}
 export default {
+  data () {
+    return {
+      user: {},
+      defaultImg: require('../../assets/img/avatar.jpg')
+    }
+  },
+  methods: {
+    // getUserInfo () {
+    //   let userInfoJson = window.localStorage.getItem('userInfo')
+    //   let userInfoObj = userInfoJson ? JSON.parse(userInfoJson) : null// 获取tokn值
+    //   console.log(userInfoObj)
+    //   userInfoObj.token && this.$axios({
+    //     url: '/user/profile',
+    //     headers: { 'Authorization': `bearer ${userInfoObj.token}` }
+    //   })
+    //     .then(res => {
+    //       this.user = res.data.data
+    //       console.log(this.user)
+    //     })
+    // },
+    commandAction (command) {
+      if (command === 'account') {
+
+      } else if (command === 'gitUrl') {
+        window.location.href = 'https://github.com/YuanS1119/toutiao-81'
+      } else if (command === 'out') {
+        window.localStorage.clear()
+        this.$router.push('/login')
+      }
+    }
+  },
+  created () {
+    // this.getUserInfo()
+  }
 
 }
 </script>
@@ -39,7 +80,7 @@ export default {
         .header_right{
             display: flex;
             align-items: center;
-            .img{
+            img{
                 width: 40px;
                 height: 40px;
                 border-radius: 50%;
