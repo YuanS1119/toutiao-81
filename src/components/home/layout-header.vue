@@ -52,7 +52,7 @@ export default {
     // },
     commandAction (command) {
       if (command === 'account') {
-
+        this.$router.push('/home/account')
       } else if (command === 'gitUrl') {
         window.location.href = 'https://github.com/YuanS1119/toutiao-81'
       } else if (command === 'out') {
