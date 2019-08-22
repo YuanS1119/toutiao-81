@@ -70,7 +70,7 @@ export default {
             data: this.formData // post参数
           }).then(res => {
             console.log(res)
-            window.localStorage.setItem('userInfo', JSON.stringify(res.data.data))
+            window.localStorage.setItem('userInfo', JSON.stringify(res.data))
             this.$router.push('/home')
           }).catch(() => {
             this.$message({

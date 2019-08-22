@@ -39,7 +39,7 @@ export default {
         url: '/user/profile'
       })
         .then(res => {
-          this.user = res.data.data
+          this.user = res.data
         })
     },
     commandAction (command) {
