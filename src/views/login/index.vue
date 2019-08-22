@@ -69,7 +69,7 @@ export default {
             url: '/authorizations', // post接口
             data: this.formData // post参数
           }).then(res => {
-            // console.log(res)
+            console.log(res)
             window.localStorage.setItem('userInfo', JSON.stringify(res.data.data))
             this.$router.push('/home')
           }).catch(() => {

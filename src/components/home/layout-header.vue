@@ -15,9 +15,6 @@
                     <i class="el-icon-arrow-down el-icon--right"></i>
                 </span>
                 <el-dropdown-menu slot="dropdown">
-                    <!-- <el-dropdown-item >个人信息</el-dropdown-item>
-                    <el-dropdown-item >git地址</el-dropdown-item>
-                    <el-dropdown-item >退出</el-dropdown-item> -->
                     <el-dropdown-item command="account">个人信息</el-dropdown-item>
                     <el-dropdown-item command="gitUrl">git地址</el-dropdown-item>
                     <el-dropdown-item command="out">退出</el-dropdown-item>
@@ -37,19 +34,14 @@ export default {
     }
   },
   methods: {
-    // getUserInfo () {
-    //   let userInfoJson = window.localStorage.getItem('userInfo')
-    //   let userInfoObj = userInfoJson ? JSON.parse(userInfoJson) : null// 获取tokn值
-    //   console.log(userInfoObj)
-    //   userInfoObj.token && this.$axios({
-    //     url: '/user/profile',
-    //     headers: { 'Authorization': `bearer ${userInfoObj.token}` }
-    //   })
-    //     .then(res => {
-    //       this.user = res.data.data
-    //       console.log(this.user)
-    //     })
-    // },
+    getUserInfo () {
+      this.$axios({
+        url: '/user/profile'
+      })
+        .then(res => {
+          this.user = res.data.data
+        })
+    },
     commandAction (command) {
       if (command === 'account') {
         this.$router.push('/home/account')
@@ -62,7 +54,7 @@ export default {
     }
   },
   created () {
-    // this.getUserInfo()
+    this.getUserInfo()
   }
 
 }
