@@ -1,7 +1,7 @@
 <template>
   <div class="home">
     <el-container>
-      <el-aside style='width:200px;height:100vh;background-color:#323745'></el-aside>
+      <el-aside style='width:200px;min-height:100vh;background-color:#323745'></el-aside>
        <!--右面容器 -->
       <el-container>
         <!-- 右边header -->
