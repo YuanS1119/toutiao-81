@@ -5,27 +5,29 @@
       </bread-crumb>
       <el-form>
         <el-form-item label="文章状态：">
-          <el-radio-group v-model="radio">
-            <el-radio :label="1">全部</el-radio>
-            <el-radio :label="2">草稿</el-radio>
-            <el-radio :label="3">待审核</el-radio>
-            <el-radio :label="4">审核通过</el-radio>
-            <el-radio :label="5">审核失败</el-radio>
+          <el-radio-group v-model="searchParams.status" @change="refreshList">
+            <el-radio :label="5">全部</el-radio>
+            <el-radio :label="0">草稿</el-radio>
+            <el-radio :label="1">待审核</el-radio>
+            <el-radio :label="2">审核通过</el-radio>
+            <el-radio :label="3">审核失败</el-radio>
           </el-radio-group>
         </el-form-item>
         <el-form-item label="频道列表：">
-          <el-select v-model="value" placeholder="请选择">
+          <el-select v-model="searchParams.channels_id" placeholder="请选择">
             <el-option
-              v-for="item in options"
-              :key="item.value"
+              v-for="item in channels"
+              :key="item.id"
               :label="item.label"
-              :value="item.value"
+              :value="item.name"
             ></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="时间选择：">
           <el-date-picker
-            v-model="value1"
+            v-model="searchParams.dataRange"
+            @change="refreshList"
+            value-format="yyyy-MM-dd"
             type="daterange"
             range-separator="-"
             start-placeholder="开始日期"
@@ -63,45 +65,44 @@
 export default {
   data () {
     return {
-      radio: 1,
-      value: '',
-      value1: '',
-      options: [
-        {
-          value: '选项1',
-          label: '黄金糕'
-        },
-        {
-          value: '选项2',
-          label: '双皮奶'
-        },
-        {
-          value: '选项3',
-          label: '蚵仔煎'
-        },
-        {
-          value: '选项4',
-          label: '龙须面'
-        },
-        {
-          value: '选项5',
-          label: '北京烤鸭'
-        }
-      ],
-      content: {},
+      channels: [],
+      content: {}, // 内容列表
       page: {
         total: 0
+      }, // 页数
+      searchParams: {
+        status: 5,
+        channels_id: null,
+        dataRange: null
       }
     }
   },
   methods: {
-    getContent () {
+    getArticles (params) {
       this.$axios({
-        url: '/articles'
+        url: '/articles',
+        params: { ...params }
       }).then(res => {
         this.content = res.data.results
         this.page.total = res.data.total_count
       })
+    },
+    getChannels () {
+      this.$axios({
+        url: '/channels'
+      }).then(res => {
+        this.channels = res.data.channels
+      })
+    },
+    refreshList () {
+      let { status, channels_id: cid, dataRange } = this.searchParams
+      let params = {
+        status: status === 5 ? null : status,
+        channels_id: cid,
+        begin_pubdate: dataRange && dataRange.length ? dataRange[0] : null,
+        end_pubdate: dataRange && dataRange.length > 1 ? dataRange[1] : null
+      }
+      this.getArticles(params)
     }
   },
   filters: {
@@ -135,7 +136,8 @@ export default {
     }
   },
   created () {
-    this.getContent()
+    this.getArticles()
+    this.getChannels()
   }
 }
 </script>
