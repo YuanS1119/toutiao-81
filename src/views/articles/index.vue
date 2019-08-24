@@ -34,13 +34,13 @@
         </el-form-item>
       </el-form>
     <div class="conatiner">
-      <div class="title">共找到4231条符合条件的内容</div>
+      <div class="title">共找到{{page.total}}条符合条件的内容</div>
       <div class="list"  v-for="(item,id) in content" :key="id">
         <div class="left">
           <img src="../../assets/img/404.png" alt />
           <div class="content">
             <span>{{item.title}}</span>
-            <el-tag type="success" style="width:60px;">{{item.status}}</el-tag>
+            <el-tag :type="item.status | setStatusStyle" style="width:60px;">{{item.status | setStatus}}</el-tag>
             <span>{{item.pubdate}}</span>
           </div>
         </div>
@@ -88,21 +88,55 @@ export default {
           label: '北京烤鸭'
         }
       ],
-      content: {}
+      content: {},
+      page: {
+        total: 0
+      }
     }
+  },
+  methods: {
+    getContent () {
+      this.$axios({
+        url: '/articles'
+      }).then(res => {
+        this.content = res.data.results
+        this.page.total = res.data.total_count
+      })
+    }
+  },
+  filters: {
+    setStatus (status) {
+      switch (status) {
+        case 0:
+          return '草稿'
+        case 1:
+          return '待审核'
+        case 2:
+          return '已发表'
+        case 3:
+          return '审核失败'
+        case 4:
+          return '已删除'
+      }
+    },
+    setStatusStyle (status) {
+      switch (status) {
+        case 0:
+          return 'danger'
+        case 1:
+          return 'warning'
+        case 2:
+          return 'success'
+        case 3:
+          return 'info'
+        case 4:
+          return ''
+      }
+    }
+  },
+  created () {
+    this.getContent()
   }
-  // methods:{
-  //   getContent(){
-  //     this.$axios({
-  //       url:'/articles'
-  //     }).then(res=>{
-  //       this.content = res.data.results
-  //     })
-  //   }
-  // },
-  // created(){
-  //   this.getContent()
-  // }
 }
 </script>
 
