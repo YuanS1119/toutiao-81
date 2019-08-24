@@ -45,11 +45,11 @@
           </div>
         </div>
         <div class="right">
-          <span>
+          <span style='cursor:pointer'>
             <i class="el-icon-edit"></i>
             修改
           </span>
-          <span>
+          <span @click="delItem(item)" style='cursor:pointer'>
             <i class="el-icon-delete"></i>
             删除
           </span>
@@ -124,6 +124,19 @@ export default {
         url: '/channels'
       }).then(res => {
         this.channels = res.data.channels
+      })
+    },
+    // 删除方法
+    delItem (item) {
+      this.$confirm('您确定删除此条文章?', '提示').then(() => {
+        this.$axios({
+          method: 'delete',
+          url: `/articles/${item.id.toString()}`
+        }).then(() => {
+          // 重新加载
+          // 由于 页码未变 条件未变 直接请求获取方法即可
+          this.getArticles(this.getParams())
+        })
       })
     }
   },
