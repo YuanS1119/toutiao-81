@@ -28,9 +28,14 @@ export default new Router({
         path: '',
         name: 'default',
         component: Main
-      }, {
+      },
+      {
         path: '/home/comment',
         component: () => import('./views/comment')
+      },
+      {
+        path: '/home/articles',
+        component: () => import('./views/articles')
       }
       ]
     }
