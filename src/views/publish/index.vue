@@ -3,17 +3,14 @@
     <bread-crumb slot="header">
       <template slot="title">发布文章</template>
     </bread-crumb>
-    <bread-crumb slot="header">
-      <template slot="title">发布文章</template>
-    </bread-crumb>
-    <el-form ref="myForm" :model="formData" :rules="rules" label-width="80px" class="publish-form">
+ <el-form ref="myForm" :model="formData" :rules="rules" label-width="80px" class="publish-form">
       <el-form-item prop="title" label="标题">
         <el-input v-model="formData.title" style="width:400px;"></el-input>
       </el-form-item>
       <el-form-item prop="content" label="内容">
         <el-input v-model="formData.content" type="textarea" :rows="4" placeholder="请输入内容"></el-input>
       </el-form-item>
-      <el-form-item label="封面" v-model="formData.cover">
+      <el-form-item label="封面" v-model="formData.cover.type">
         <el-radio-group>
           <el-radio :label="1">单图</el-radio>
           <el-radio :label="3">三图</el-radio>
@@ -21,14 +18,17 @@
           <el-radio :label="-1">自动</el-radio>
         </el-radio-group>
       </el-form-item>
+      <el-form-item>
+        <div>选择图片</div>
+      </el-form-item>
       <el-form-item label="频道" prop="channel_id">
-        <el-select>
+        <el-select v-model="formData.channel_id">
           <el-option :label="item.name" :value="item.id" v-for="item in channels" :key="item.id"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="publish">发布</el-button>
-        <el-button>存入草稿</el-button>
+        <el-button type="primary" @click="publish(false)">发布</el-button>
+        <el-button @click="publish(true)">存入草稿</el-button>
       </el-form-item>
     </el-form>
   </el-card>
@@ -42,10 +42,16 @@ export default {
         title: '',
         content: '',
         channel_id: null,
-        cover: 0 // 默认给个无图
+        cover: {
+          type: 0,
+          images: []
+        } // 默认给个无图
       },
       rules: {
-        title: [{ required: true, message: '标题内容不能为空' }],
+        title: [
+          { required: true, message: '标题内容不能为空' },
+          { min: 5, max: 30, message: '内容字符要在5-30个之间' }
+        ],
         content: [{ required: true, message: '文章内容不能为空' }],
         channel_id: [{ required: true, message: '频道不能为空' }]
       }
@@ -53,10 +59,18 @@ export default {
   },
   methods: {
     // 发布内容
-    publish () {
+    publish (draft) {
       this.$refs.myForm.validate(isOK => {
         if (isOK) {
           // 发布文章
+          this.$axios({
+            method: 'post',
+            url: '/articles',
+            data: this.formData,
+            params: { draft }
+          }).then(res => {
+            this.$router.push('/home/articles')
+          })
         }
       })
     },

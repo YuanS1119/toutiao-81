@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import Home from './views/home'
 import Login from './views/login'
 import Main from './views/home/main'
+import updata from './views/test'
 
 Vue.use(Router)
 
@@ -41,6 +42,10 @@ export default new Router({
         component: () => import('./views/publish') // 按需加载的写法
       }
       ]
+    },
+    {
+      path: '/updata',
+      component: updata
     }
     // {
     //   path: '/about',
