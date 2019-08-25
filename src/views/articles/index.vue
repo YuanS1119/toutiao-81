@@ -102,7 +102,7 @@ export default {
       return params
     },
     currentChange (newPage) {
-      this.page.currenrPage = newPage
+      this.page.currentPage = newPage
       this.getArticles(this.getParams())
     },
     // 刷新列表数据 状态改变/频道切换/日期改变 都会触发
@@ -133,8 +133,6 @@ export default {
           method: 'delete',
           url: `/articles/${item.id.toString()}`
         }).then(() => {
-          // 重新加载
-          // 由于 页码未变 条件未变 直接请求获取方法即可
           this.getArticles(this.getParams())
         })
       })
