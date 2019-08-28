@@ -135,7 +135,6 @@ export default {
     },
     goEditor (item) {
       this.$router.push(`/home/publish/${item.id.toString()}`)
-      console.log(item.id.toString())
     }
   },
   filters: {

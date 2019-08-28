@@ -41,7 +41,7 @@ export default new Router({
         path: '/home/publish', // 发表文章
         component: () => import('./views/publish') // 按需加载的写法
       }, {
-        path: '/home/publish/:articlsId', // 发表文章
+        path: '/home/publish/:articleId', // 发表文章
         component: () => import('./views/publish') // 按需加载的写法
       }, {
         path: '/home/fans',

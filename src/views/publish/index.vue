@@ -63,11 +63,13 @@ export default {
       this.$refs.myForm.validate(async isOK => {
         if (isOK) {
           // 发布文章
+          // 定义参数集合
           let { articleId } = this.$route.params
           let method = articleId ? 'put' : 'post'
+          let url = articleId ? `/articles/${articleId}` : '/articles'
           await this.$axios({
             method,
-            url: '/articles',
+            url,
             data: this.formData,
             params: { draft }
           })
@@ -81,18 +83,19 @@ export default {
       })
       this.channels = result.data.channels
     },
-    async getActicleById () {
+    getArticleById () {
       let { articleId } = this.$route.params
-      let res = await this.$axios({
+      this.$axios({
         url: `/articles/${articleId}`
+      }).then(res => {
+        this.formData = res.data
       })
-      this.formData = res.data
     }
   },
   created () {
     this.getChannels() // 获取频道
     let { articleId } = this.$route.params
-    articleId && this.getActicleById()// 根据文章id获取文章内容
+    articleId && this.getArticleById()
   }
 }
 </script>
