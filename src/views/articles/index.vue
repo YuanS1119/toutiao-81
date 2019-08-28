@@ -45,7 +45,7 @@
           </div>
         </div>
         <div class="right">
-          <span style='cursor:pointer'>
+          <span style='cursor:pointer' @click='goEditor(item)'>
             <i class="el-icon-edit"></i>
             修改
           </span>
@@ -110,32 +110,32 @@ export default {
       this.page.currentPage = 1
       this.getArticles(this.getParams())
     },
-    getArticles (params) {
-      this.$axios({
+    async getArticles (params) {
+      let res = await this.$axios({
         url: '/articles',
         params: { ...params }
-      }).then(res => {
-        this.content = res.data.results
-        this.page.total = res.data.total_count
       })
+      this.content = res.data.results
+      this.page.total = res.data.total_count
     },
-    getChannels () {
-      this.$axios({
+    async getChannels () {
+      let res = await this.$axios({
         url: '/channels'
-      }).then(res => {
-        this.channels = res.data.channels
       })
+      this.channels = res.data.channels
     },
     // 删除方法
-    delItem (item) {
-      this.$confirm('您确定删除此条文章?', '提示').then(() => {
-        this.$axios({
-          method: 'delete',
-          url: `/articles/${item.id.toString()}`
-        }).then(() => {
-          this.getArticles(this.getParams())
-        })
+    async delItem (item) {
+      await this.$confirm('您确定删除此条文章?', '提示')
+      await this.$axios({
+        method: 'delete',
+        url: `/articles/${item.id.toString()}`
       })
+      this.getArticles(this.getParams())
+    },
+    goEditor (item) {
+      this.$router.push(`/home/publish/${item.id.toString()}`)
+      console.log(item.id.toString())
     }
   },
   filters: {

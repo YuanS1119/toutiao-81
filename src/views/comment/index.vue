@@ -53,40 +53,35 @@ export default {
       this.getComments()// 每次改变需要重新查询一次
     },
     // 查询评论数据
-    getComments () {
+    async getComments () {
       let page = this.page.currentPage// 页数
       // let per_page = this.page.pageSize// 每页数量
       let transformPage = { page, per_page: this.page.pageSize }
-      console.log(transformPage)
-      this.$axios({
+      let res = await this.$axios({
         url: '/articles',
         params: {
           response_type: 'comment',
           ...transformPage
         }
-      }).then(res => {
-        console.log(res)
-        this.commentInfo = res.data.results // 将取到的数据给当前数据对象
-        this.page.totalPage = res.data.total_count
       })
+      this.commentInfo = res.data.results // 将取到的数据给当前数据对象
+      this.page.totalPage = res.data.total_count
     },
     // table中写好的过滤属性
     formatter (row, column, cellValue, index) {
       return cellValue ? '正常' : '关闭'
     },
-    closeOrOpen (row) {
+    async closeOrOpen (row) {
       // console.log(row.id.toString())
       let status = row.comment_status ? '关闭' : '打开'
-      this.$confirm(`确认${status}评论吗？`, '提示').then(() => {
-        this.$axios({
-          method: 'put',
-          url: '/comments/status',
-          params: { article_id: row.id.toString() },
-          data: { allow_comment: !row.comment_status }
-        }).then(() => {
-          this.getComments()
-        })
+      await this.$confirm(`确认${status}评论吗？`, '提示')
+      await this.$axios({
+        method: 'put',
+        url: '/comments/status',
+        params: { article_id: row.id.toString() },
+        data: { allow_comment: !row.comment_status }
       })
+      this.getComments()
     }
   },
   created () {

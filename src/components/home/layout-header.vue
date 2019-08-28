@@ -34,13 +34,11 @@ export default {
     }
   },
   methods: {
-    getUserInfo () {
-      this.$axios({
+    async getUserInfo () {
+      let res = await this.$axios({
         url: '/user/profile'
       })
-        .then(res => {
-          this.user = res.data
-        })
+      this.user = res.data
     },
     commandAction (command) {
       if (command === 'account') {

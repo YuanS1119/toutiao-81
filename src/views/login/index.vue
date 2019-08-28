@@ -61,18 +61,15 @@ export default {
   },
   methods: {
     isAgree () {
-      this.$refs.form.validate(isOK => {
+      this.$refs.form.validate(async isOK => {
         if (isOK) {
-          // console.log(this)
-          this.$axios({
+          let res = await this.$axios({
             method: 'post', // post提交方法
             url: '/authorizations', // post接口
             data: this.formData // post参数
-          }).then(res => {
-            console.log(res)
-            window.localStorage.setItem('userInfo', JSON.stringify(res.data))
-            this.$router.push('/home')
           })
+          window.localStorage.setItem('userInfo', JSON.stringify(res.data))
+          this.$router.push('/home')
         }
       })
     }

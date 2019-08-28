@@ -58,32 +58,41 @@ export default {
     }
   },
   methods: {
-    // 发布内容
+    // 发布内容/草稿
     publish (draft) {
-      this.$refs.myForm.validate(isOK => {
+      this.$refs.myForm.validate(async isOK => {
         if (isOK) {
           // 发布文章
-          this.$axios({
-            method: 'post',
+          let { articleId } = this.$route.params
+          let method = articleId ? 'put' : 'post'
+          await this.$axios({
+            method,
             url: '/articles',
             data: this.formData,
             params: { draft }
-          }).then(res => {
-            this.$router.push('/home/articles')
           })
+          this.$router.push('/home/articles')
         }
       })
     },
-    getChannels () {
-      this.$axios({
+    async getChannels () {
+      let result = await this.$axios({
         url: '/channels'
-      }).then(result => {
-        this.channels = result.data.channels
       })
+      this.channels = result.data.channels
+    },
+    async getActicleById () {
+      let { articleId } = this.$route.params
+      let res = await this.$axios({
+        url: `/articles/${articleId}`
+      })
+      this.formData = res.data
     }
   },
   created () {
     this.getChannels() // 获取频道
+    let { articleId } = this.$route.params
+    articleId && this.getActicleById()// 根据文章id获取文章内容
   }
 }
 </script>
